@@ -21,6 +21,7 @@ contract Orbs is ERC721URIStorage{
     constructor() ERC721("Orbs", "ORBS") {
     }
 
+
     // 0 -> ['tone','note','time','hashmark'] ...
     function mintCollectable(address _owner, string memory _tokenURI)
         public
