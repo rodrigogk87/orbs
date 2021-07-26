@@ -20,6 +20,28 @@ contract Orbs is ERC721URIStorage{
 
     constructor() ERC721("Orbs", "ORBS") {
     }
+    
+
+    function getAllOrbs () public view virtual returns( OrbProps[] memory ) {
+        OrbProps[] memory tokens = new OrbProps[](_tokenIds.current());
+        uint256 counter = 0;
+
+        for(uint i = 1; i < _tokenIds.current() + 1; i++) {
+                OrbProps memory token = OrbProps(i, _tokenPrices[i], tokenURI(i));
+                tokens[counter] = token;
+                counter++;
+        }
+        return tokens;
+    }
+    
+    /**
+     * @dev Base URI for computing {tokenURI}. If set, the resulting URI for each
+     * token will be the concatenation of the `baseURI` and the `tokenId`. Empty
+     * by default, can be overriden in child contracts.
+     */
+    function _baseURI() override internal view virtual returns (string memory) {
+        return "https://ipfs.infura.io/ipfs/";
+    }
 
 
     // 0 -> ['tone','note','time','hashmark'] ...
