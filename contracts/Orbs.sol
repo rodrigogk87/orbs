@@ -8,6 +8,8 @@ contract Orbs is ERC721{
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
+    address payable orbsGod;
+
 
     mapping (uint256 => uint256) private _tokenPrices;
     mapping (uint256 => string) private _tokenDnas;
@@ -17,9 +19,11 @@ contract Orbs is ERC721{
         address owner;
         uint256 price;
         string dna;
+        uint likes;
     }
 
     constructor() ERC721("Orbs", "ORBS") {
+        orbsGod = payable(msg.sender);
     }
     
 
@@ -33,15 +37,16 @@ contract Orbs is ERC721{
                 tokens[counter] = token;
                 counter++;
         }
+
         return tokens;
     }
 
-    function setTokenPrice(uint256 tokenId, uint256 _price) public {
+    function setTokenPrice(uint256 tokenId, uint256 _price) public onlyOwnerOfToken(tokenId){
         require(_exists(tokenId), "ERC721Metadata: Price set of nonexistent token");
         _tokenPrices[tokenId] = _price;
     }
 
-    function setTokenDna(uint256 tokenId,string memory _dna) public {
+    function setTokenDna(uint256 tokenId,string memory _dna) internal {
         _tokenDnas[tokenId] = _dna;
     }
     
@@ -49,9 +54,10 @@ contract Orbs is ERC721{
 
     // 0 -> ['tone','note','time','hashmark'] ...
     function mintCollectable(address _owner, string memory _dna)
-        public
+        public payable
         returns (uint256)
     {
+        require(msg.value >= 0.01 ether, 'Need to send 0.01 ETH');
         _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         _mint(_owner, newItemId);
@@ -59,7 +65,22 @@ contract Orbs is ERC721{
         return newItemId;
     }
 
-    //receive() external payable {}
+    receive() external payable {}
+
+
+    function transferBalanceToOwner() payable external onlyCreator{
+        orbsGod.transfer(address(this).balance);
+    }
+
+    modifier onlyOwnerOfToken(uint256 tokenId){
+        require(msg.sender == ownerOf(tokenId), 'only creator of the token');
+        _;
+    }
+
+    modifier onlyCreator{
+        require(msg.sender == orbsGod, 'only creator');
+        _;
+    }
 
 
 }
