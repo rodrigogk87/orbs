@@ -27,7 +27,7 @@ contract Orbs is ERC721{
         orbsGod = payable(msg.sender);
     }
     
-    //EX TKID = 6, NO = 5, CURRENT = 7
+    //EX TKID = 7, NO = 5, CURRENT = 7
     function getNthsOrbs(uint _token_id,uint _number_of_orbs) public view returns(OrbProps[] memory ){
         require(_number_of_orbs > 0,'number of orbs should be greater than 0');
 
@@ -39,6 +39,13 @@ contract Orbs is ERC721{
         if(_tokenIds.current()==1){
          OrbProps[] memory token = new OrbProps[](1);
          token[0] = OrbProps(1,ownerOf(1), _tokenPrices[1], _tokenDnas[1],_tokenLikes[1]);
+         return token;
+        }        
+
+        //particular case last element
+        if(_tokenIds.current()==_token_id){
+         OrbProps[] memory token = new OrbProps[](1);
+         token[0] = OrbProps(1,ownerOf(_token_id), _tokenPrices[_token_id], _tokenDnas[_token_id],_tokenLikes[_token_id]);
          return token;
         }        
 
