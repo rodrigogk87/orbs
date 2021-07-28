@@ -47,14 +47,14 @@ module.exports = {
     // tab if you use this network and you must also set the `host`, `port` and `network_id`
     // options below to some value.
     //
-    kovan: {
+    /*kovan: {
       provider: () =>
         new provider(
           secrets.mnemonic,
           `wss://kovan.infura.io/ws/v3/${secrets.projectId}`
         ),
       network_id: 42
-    } 
+    } */
     // advanced: {
     // port: 8777,             // Custom port
     // network_id: 1342,       // Custom network
